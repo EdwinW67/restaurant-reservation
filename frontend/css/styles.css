@@ -1,0 +1,281 @@
+/* General reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #f6f4f1;
+  color: #222;
+  line-height: 1.6;
+}
+
+/* Layout */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #2b2926;
+  color: #fff;
+  padding: 12px 0;
+  margin-bottom: 24px;
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 18px;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+.logout-btn {
+  float: right;
+  background-color: #444;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  background-color: #222;
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; justify-content: center; align-items: center;
+}
+.modal.hidden { display: none; }
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 350px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th {
+  background: #333;
+  color: white;
+  padding: 10px;
+}
+
+table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.edit-btn, .delete-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #0077cc;
+  color: white;
+}
+
+.delete-btn {
+  background: #cc0000;
+  color: white;
+}
+
+
+
+/* Hero / sections */
+.hero {
+  padding: 20px 0 32px;
+}
+
+.hero-title {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  color: #555;
+  margin-bottom: 18px;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.section p {
+  margin-bottom: 8px;
+}
+
+/* Cards / content blocks */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+/* Menu */
+.menu-category {
+  margin-bottom: 20px;
+}
+
+.menu-category h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.menu-item-name {
+  font-weight: 500;
+}
+
+.menu-item-price {
+  color: #555;
+  margin-left: 12px;
+}
+
+/* Opening hours */
+.hours-list {
+  list-style: none;
+}
+
+.hours-list li {
+  margin-bottom: 4px;
+}
+
+/* Forms */
+form {
+  background-color: #fff;
+  padding: 18px 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.form-row {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font: inherit;
+}
+
+button {
+  background-color: #b6532b;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background-color: #9c4520;
+}
+
+/* Messages */
+.message {
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.message.success {
+  color: #207227;
+}
+
+.message.error {
+  color: #b20000;
+}
+
+/* Footer */
+footer {
+  margin-top: 40px;
+  padding: 16px 0;
+  background-color: #2b2926;
+  color: #fff;
+}
+
+footer .container {
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .navbar .container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .navbar ul {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}

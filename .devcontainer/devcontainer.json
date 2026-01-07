@@ -1,0 +1,29 @@
+{
+  "name": "Restaurant Reservation Dev",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+
+  "runArgs": [
+    "--network=host",
+    "--shm-size=1gb"
+  ],
+
+  "containerEnv": { "VITE_API_URL": "http://host.docker.internal:3001" },
+  
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-ossdata.vscode-postgresql",
+        "ms-playwright.playwright",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+
+  "postCreateCommand": "cd backend && npm install"
+}

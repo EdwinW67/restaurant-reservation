@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Restaurant Reservation API",
+    "version": "1.0.0",
+    "description": "API for creating and listing restaurant reservations."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001"
+    }
+  ],
+  "paths": {
+    "/reservations": {
+      "get": {
+        "summary": "Get all reservations",
+        "responses": {
+          "200": {
+            "description": "List of reservations"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new reservation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created reservation"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ReservationInput": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "guests": { "type": "integer" },
+          "date": { "type": "string", "format": "date" },
+          "time": { "type": "string" }
+        },
+        "required": ["name", "email", "guests", "date", "time"]
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: restouser
+      POSTGRES_PASSWORD: restopass
+      POSTGRES_DB: restaurant
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: db
+      DB_USER: restouser
+      DB_PASS: restopass
+      DB_NAME: restaurant
+      # Optional email config (example placeholders)
+      SMTP_HOST: smtp.example.com
+      SMTP_PORT: 587
+      SMTP_USER: user@example.com
+      SMTP_PASS: secret
+      MAIL_FROM: "Restaurant <reservations@example.com>"
+      ADMIN_USER: admin
+      ADMIN_PASS: supersecret
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+  # tests:
+  #   build: ./tests
+  #   depends_on:
+  #     - frontend
+  #     - backend
