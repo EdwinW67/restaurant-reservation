@@ -1,0 +1,8 @@
+{
+  "postgres.connections": [
+    {
+      "name": "Restaurant DB",
+      "connectionString": "postgres://restouser:restopass@localhost:5432/restaurant"
+    }
+  ]
+}
