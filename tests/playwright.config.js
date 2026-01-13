@@ -1,7 +1,9 @@
+const { defineConfig } = require('@playwright/test');
+
 module.exports = {
   use: {
     headless: true,
-	baseURL: process.env.API_BASE || "http://host.docker.internal:3001",
+	baseURL: process.env.API_BASE || "http://localhost:3001",
     launchOptions: {
       args: ["--disable-dev-shm-usage"]
     },
@@ -9,5 +11,7 @@ module.exports = {
     video: "retain-on-failure", 
     screenshot: "only-on-failure"
   }
-  , env: { NODE_ENV: "test" }
+  , env: { NODE_ENV: "test",
+    API_BASE: "http://localhost:3001"
+   }
 };

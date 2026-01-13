@@ -2,7 +2,9 @@ const { test, expect } = require("@playwright/test");
 
 test("User can submit a reservation", async ({ page }) => {
 await page.goto("http://localhost:3000/reservations.html");
-await page.waitForSelector("#reservation-form");
+
+
+await page.waitForSelector("reservation-form");
 
 
 
@@ -15,6 +17,8 @@ await page.waitForSelector("#reservation-form");
   await page.click("button[type=submit]");
 
   //#reservation-message
+  console.log(await page.textContent("reservation-message"));
 
-  await expect(page.getById("#reservation-message")).toContainText("Your reservation has been saved.");
+
+  await expect(page.getById("reservation-message")).toContainText("Your reservation has been saved.");
 });
