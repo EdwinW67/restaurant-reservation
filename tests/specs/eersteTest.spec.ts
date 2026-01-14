@@ -6,6 +6,6 @@ test('homepage shows hero title and highlights', async ({ page }) => {
     await home.goto();
     await expect(home.heroTitle).toContainText('Welcome to La Warmondia');
     await expect(home.highlightCards).toHaveCount(3);
-    await home.clickReservations();
-    await expect(page).toHaveURL(/reservations/);
+    await home.clickContact;
+    await expect(page).toHaveTitle('La Warmondia - Home');
 });

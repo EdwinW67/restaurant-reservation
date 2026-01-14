@@ -49,4 +49,8 @@ export class HomePage {
     async clickReservations() {
         await this.navReservations.click();
     }
+
+    async clickContact() {
+        await this.navContact.click();
+    }
 }
