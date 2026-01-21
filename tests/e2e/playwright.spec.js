@@ -4,7 +4,9 @@ test.use({ headless: true });
 test('User can submit a reservation', async ({ page }) => {
     await page.goto('http://localhost:3000/reservations.html');
 
-    await page.waitForSelector('reservation-form');
+    await expect(page.locator('#reservation-form')).toBeVisible();
+
+    //await expect(page.getById('reservation-form')).toBeVisible();
 
     await page.fill('#name', 'Ed Tester');
     await page.fill('#email', 'ed@example.com');
@@ -15,9 +17,9 @@ test('User can submit a reservation', async ({ page }) => {
     await page.click('button[type=submit]');
 
     //#reservation-message
-    console.log(await page.textContent('reservation-message'));
+    console.log(await page.textContent('#reservation-message'));
 
-    await expect(page.getById('reservation-message')).toContainText(
+    await expect(page.locator('#reservation-message')).toContainText(
         'Your reservation has been saved.'
     );
 });
