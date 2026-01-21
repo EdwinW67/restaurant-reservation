@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
+import { BasePage } from './BasePage';
 
-export class HomePage {
-    readonly page: Page;
+export class HomePage extends BasePage {
+    //readonly page: Page;
 
     // Navbar
     readonly navHome: Locator;
@@ -19,7 +20,8 @@ export class HomePage {
     readonly highlightCards: Locator;
 
     constructor(page: Page) {
-        this.page = page;
+        super(page);
+        //this.page = page;
 
         // Navbar selectors
         this.navHome = page.getByRole('link', { name: 'Home' });
@@ -42,8 +44,10 @@ export class HomePage {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    async goto() {
-        await this.page.goto('/');
+
+    async open() {
+        await this.goto('http://localhost:3000/');
+        await expect(this.navHome).toBeVisible();
     }
 
     async clickReservations() {
