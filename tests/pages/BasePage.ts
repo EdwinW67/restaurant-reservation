@@ -8,12 +8,10 @@ export class BasePage {
         this.page = page;
     }
 
-    async goto(url: string) {
-        // eslint-disable-next-line playwright/no-networkidle
+    async goto(url: string) { 
         await this.page.goto(url, { waitUntil: 'networkidle' });
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     async waitForPageLoaded() {
         await this.page.waitForLoadState('domcontentloaded');
     }
