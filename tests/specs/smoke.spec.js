@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-import { HomePage } from '../pages/HomePage';
+import { HomePage } from '@pages/HomePage';
 
 test('browser launches', async ({ page }) => {
     const home = new HomePage(page);
