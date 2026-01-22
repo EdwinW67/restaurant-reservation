@@ -16,6 +16,21 @@ test("rejects invalid date", async ({ request }) => {
 });
 
 
+test("accepts date in UK format", async ({ request }) => {
+  const response = await request.post("/reservations", {
+    data: {
+      name: "Ed",
+      email: "ed@example.com",
+      guests: 2,
+      date: "03-16-2026",
+      time: "19:00"
+    }
+  });
+
+  expect(response.status()).toBe(201);
+});
+
+
 test("rejects invalid email", async ({ request}) => {
   const response = await request.post("/reservations", {
     data: {

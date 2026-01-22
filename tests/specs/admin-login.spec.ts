@@ -19,9 +19,7 @@ test('Foutieve inlog wordt geweigerd', async({page}) => {
     await loginPage.open();
     await loginPage.login('admin','admin');
 
-    
     await expect(loginPage.loginMessage).toHaveText('Invalid username or password');
 
 
 })
-
