@@ -37,6 +37,17 @@ This project supports:
 - `POST /admin/login` — authenticate admin  
 
 ---
+### Visual Studio Code extensies
+- Dev Containers
+- Container tools
+- Docker
+- Plawright Test for VSCode
+- PostgreSQL
+- Prettier
+
+
+
+---
 
 ## 🐳 Running with Docker
 
@@ -83,4 +94,5 @@ restaurant-reservation/
 
 📝 Notes
 See PROMPTS.md for all development prompts and debugging steps.
+
 See ARCHITECTURE.md for system design and flow.
