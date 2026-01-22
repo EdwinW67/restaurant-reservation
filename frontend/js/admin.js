@@ -33,13 +33,37 @@ async function loadReservations() {
   });
 }
 
-document.getElementById("logout-btn").addEventListener("click", async () => {
-  await fetch(`${API_BASE}/admin/logout`, {
-    method: "POST",
-    credentials: "include"
-  });
-  window.location.href = "admin-login.html";
+document.getElementById("logout-btn").addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch(`${API_BASE}/admin/logout`, {
+      method: "POST",
+      credentials: "include"
+    });
+
+    if (!response.ok) {
+      console.warn("Logout API returned", response.status);
+    }
+  } catch (err) {
+    console.error("Logout request failed:", err);
+  }
+
+  // ✅ Altijd redirecten
+  window.location.assign("/index.html");
 });
+
+
+
+
+
+// document.getElementById("logout-btn").addEventListener("click", async () => {
+//   await fetch(`${API_BASE}/admin/logout`, {
+//     method: "POST",
+//     credentials: "include"
+//   });
+//   window.location.href = "index.html";
+// });
 
 document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("delete-btn")) {
