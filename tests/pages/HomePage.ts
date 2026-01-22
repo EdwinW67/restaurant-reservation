@@ -11,6 +11,7 @@ export class HomePage extends BasePage {
     readonly navHours: Locator;
     readonly navReservations: Locator;
     readonly navContact: Locator;
+    readonly navAdminPage: Locator;
 
     // Hero section
     readonly heroTitle: Locator;
@@ -31,6 +32,7 @@ export class HomePage extends BasePage {
         });
         this.navReservations = page.getByRole('link', { name: 'Reservations' });
         this.navContact = page.getByRole('link', { name: 'Contact' });
+        this.navAdminPage = page.getByRole('link', {name: 'Admin'});
 
         // Hero section
         this.heroTitle = page.locator('.hero-title');
@@ -57,4 +59,13 @@ export class HomePage extends BasePage {
     async clickContact() {
         await this.navContact.click();
     }
+
+    async clickAdmin() {
+        await this.navAdminPage.click();
+    }
+
+    async clickMenu() {
+        await this.navMenu.click();
+    }
+
 }
