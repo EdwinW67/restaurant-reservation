@@ -81,8 +81,12 @@ export class AdminPage extends BasePage {
 
     
 // ---------- Wait / Assertions ----------
+
 async waitForRows(min = 1) {
-  await this.page.locator('#reservations-table tbody tr').first().waitFor();
+  await this.page.waitForFunction(
+    (count) => document.querySelectorAll('#reservations-table tbody tr').length >= count,
+    min
+  );
 }
 
   
