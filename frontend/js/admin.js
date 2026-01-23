@@ -15,7 +15,7 @@ async function loadReservations() {
 
   const reservations = await response.json();
   const tbody = document.querySelector("#reservations-table tbody");
-
+  row.dataset.id = r.id;
   reservations.forEach(r => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -25,8 +25,24 @@ async function loadReservations() {
       <td>${r.date}</td>
       <td>${r.time}</td>
       <td>
-        <button class="edit-btn" data-id="${r.id}">Edit</button>
-        <button class="delete-btn" data-id="${r.id}">Delete</button>
+        
+<button 
+  class="edit-btn" 
+  data-id="${r.id}" 
+  aria-label="Edit reservation ${r.id}"
+>
+  Edit
+</button>
+
+  
+<button
+  class="delete-btn"
+  data-id="${r.id}"
+  aria-label="Delete reservation ${r.id}"
+>
+  Delete
+</button>
+
       </td>
     `;
     tbody.appendChild(row);
@@ -52,18 +68,6 @@ document.getElementById("logout-btn").addEventListener("click", async (e) => {
   // ✅ Altijd redirecten
   window.location.assign("/index.html");
 });
-
-
-
-
-
-// document.getElementById("logout-btn").addEventListener("click", async () => {
-//   await fetch(`${API_BASE}/admin/logout`, {
-//     method: "POST",
-//     credentials: "include"
-//   });
-//   window.location.href = "index.html";
-// });
 
 document.addEventListener("click", async (e) => {
   if (e.target.classList.contains("delete-btn")) {

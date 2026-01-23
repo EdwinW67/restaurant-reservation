@@ -1,6 +1,5 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
-import { getSystemErrorMessage } from 'node:util';
 
 export class AdminLoginPage extends BasePage {
 
@@ -25,7 +24,7 @@ export class AdminLoginPage extends BasePage {
 
     async open() {
         await this.goto('/admin-login.html');
-        await expect(this.usernameInput).toBeVisible();
+        await this.waitForPageLoaded();
     }
 
     async login(username: string, password: string) {
