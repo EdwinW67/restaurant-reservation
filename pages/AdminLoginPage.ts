@@ -38,6 +38,13 @@ export class AdminLoginPage extends BasePage {
         return this.loginMessage.textContent();
     }
 
+    async loginInAsAdmin() {
+        await this.open();
+        
+        await this.login('admin','supersecret');
+
+    }
+
 
 
 

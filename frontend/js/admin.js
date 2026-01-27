@@ -1,4 +1,5 @@
 const API_BASE = "http://localhost:3001";
+const HOME_BASE = "http://localhost:3000";
 
 
 async function loadReservations() {
@@ -66,7 +67,7 @@ document.getElementById("logout-btn").addEventListener("click", async (e) => {
   }
 
   // ✅ Altijd redirecten
-  window.location.assign("/index.html");
+  window.location.assign$(HOME_BASE);
 });
 
 document.addEventListener("click", async (e) => {

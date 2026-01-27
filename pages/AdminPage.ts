@@ -79,8 +79,13 @@ export class AdminPage extends BasePage {
         await this.waitForPageLoaded();
     }
 
+    async reloadPage() {
+      await this.reloadPage();
+
+    }
+
     
-// ---------- Wait / Assertions ----------
+  // ---------- Wait / Assertions ----------
 
 async waitForRows(min = 1) {
   await this.page.waitForFunction(
@@ -96,7 +101,7 @@ async expectAdminMessageContains(text: string) {
 
 
  
-/* ===========================
+    /* ===========================
      Row queries
      =========================== */
 
@@ -110,7 +115,20 @@ async expectAdminMessageContains(text: string) {
     return this.rows.nth(index);
   }
 
-/**
+  
+async waitForPageLoaded() {
+  // 1. Wait for the table to be visible
+  await this.table.waitFor({ state: 'visible' });
+
+  // 2. Wait until at least one render cycle of reservations has occurred
+  await this.page.waitForFunction(() => {
+    const rows = document.querySelectorAll('#reservations-table tbody tr');
+    return rows.length > 0;
+  });
+}
+
+
+  /**
    * Get row by reservation id using <tr data-id="..."> if present,
    * otherwise anchor on a button with data-id and go up to the tr.
    */
@@ -127,6 +145,22 @@ async expectAdminMessageContains(text: string) {
   rowByText(text: string): Locator {
     return this.rows.filter({ hasText: text }).first();
   }
+
+  
+async getIdOfRowByIndex(index: number): Promise<string> {
+  const button = this.rows
+    .nth(index)
+    .locator('[data-testid="delete-btn"], .delete-btn');
+
+  const id = await button.getAttribute('data-id');
+
+  if (!id) {
+    throw new Error(`No data-id found for row index ${index}`);
+  }
+
+  return id;
+}
+
 
   
 /* ===========================
@@ -157,9 +191,11 @@ async expectAdminMessageContains(text: string) {
   async clickEditById(id: string | number): Promise<void> {
     await this.editButtonIn(this.rowById(id)).click();
   }
-  async clickDeleteById(id: string | number): Promise<void> {
-    await this.deleteButtonIn(this.rowById(id)).click();
-  }
+  
+async clickDeleteById(id: number | string) {
+  await this.page.locator(`[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`).click();
+}
+
 
   
  // --- Click by visible text (name/email/etc.) ---
@@ -169,6 +205,86 @@ async expectAdminMessageContains(text: string) {
   async clickDeleteByText(text: string): Promise<void> {
     await this.deleteButtonIn(this.rowByText(text)).click();
   }
+
+
+
+async deleteNthReservation(n: number, confirm = true) {
+  const id = await this.getIdOfRowByIndex(n);
+  await this.deleteReservationById(Number(id), confirm);
+}
+
+
+async getLastRowId(): Promise<string> {
+  const count = await this.rows.count();
+
+  if (count === 0) {
+    throw new Error("No rows available.");
+  }
+
+  return this.getIdOfRowByIndex(count - 1);
+}
+
+
+async deleteLastReservation(confirm: boolean = true) {
+  const count = await this.rows.count();
+  if (count === 0) {
+    throw new Error('No rows available to delete.');
+  }
+
+  // Read the last row's id via its delete button
+  const lastIndex = count - 1;
+  const id = await this.getIdOfRowByIndex(lastIndex);
+
+  // Handle JS confirm dialog
+  this.page.once('dialog', dialog => {
+    if (confirm) dialog.accept();
+    else dialog.dismiss();
+  });
+
+  // Click the delete button for that id
+  await this.page
+    .locator(`[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`)
+    .click();
+
+  // If confirmed, wait for the row to disappear
+  if (confirm) {
+    // Prefer waiting for the row (if you set <tr data-id="...">)
+    const rowByDataId = this.tbody.locator(`tr[data-id="${id}"]`);
+    if (await rowByDataId.count().catch(() => 0)) {
+      await rowByDataId.waitFor({ state: 'detached' });
+    } else {
+      // Fallback: wait for the specific delete button to detach
+      await this.page
+        .locator(`[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`)
+        .waitFor({ state: 'detached' });
+    }
+  }
+
+  return id; // handy if the caller wants to assert the exact id removed
+}
+
+
+
+
+  // Click op buttons in the pop up
+  
+
+async deleteReservationById(id: number, confirm: boolean = true) {
+  this.page.once('dialog', dialog => {
+    if (confirm) dialog.accept();
+    else dialog.dismiss();
+  });
+
+  await this.clickDeleteById(id);
+
+  if (confirm) {
+    await this.page.locator(`tr[data-id="${id}"]`).waitFor({ state: 'detached' });
+  }
+}
+
+
+
+
 
 
 /* ===========================

@@ -5,7 +5,7 @@ test('Admin kan succesvol inloggen', async({page}) => {
 
     const loginPage = new AdminLoginPage(page);
     await loginPage.open();
-    await loginPage.login('admin','supersecret');
+    await loginPage.loginInAsAdmin();
 
     
     await expect(loginPage.loginMessage).not.toBeVisible();
