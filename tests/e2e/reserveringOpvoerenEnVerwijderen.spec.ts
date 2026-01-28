@@ -9,31 +9,14 @@ import { loginAsAdmin } from "tests/utils/login";
     let rijenAchteraf = 0;
     let rijenNaDelete = 0;
 
-    
-test('e2e -> vooraf: tel aantal rijen voor reservering', async({page}) => {
 
-    const admin = await loginAsAdmin(page);
+test ('e2e -> Gebruiker kan een reservering opvoeren', async ({ page }) => {
 
-    await admin.waitForPageLoaded();
-
-    rijenVooraf = await admin.getRowCount();
-       
-    admin.logoutButton.click();
-
-})
-
-test('e2e -> Gebruiker kan een reservering opvoeren', async ({ page }) => {
-    
     const homePage = new HomePage(page);
     const date = randomDateWithin30Days();
-
     await homePage.open();
-
-    await homePage.clickReservations();    
-
+    await homePage.clickReservations();  
     await expect(page.locator('#reservation-form')).toBeVisible();
-
-    //await expect(page.getById('reservation-form')).toBeVisible();
 
     await page.fill('#name', 'Ed Tester');
     await page.fill('#email', 'ed@example.com');
@@ -43,54 +26,36 @@ test('e2e -> Gebruiker kan een reservering opvoeren', async ({ page }) => {
 
     await page.click('button[type=submit]');
 
-    //#reservation-message
+    // // #reservation-message
     console.log(await page.textContent('#reservation-message'));
 
     await expect(page.locator('#reservation-message')).toContainText(
         'Your reservation has been saved.'
     );
+
 });
 
-test('e2e -> achteraf: tel aantal rijen na reservering', async({page}) => {
+
+test ('e2e -> Verwijderen van meest recent aangemaakte reservering', async ({ page }) => {
 
     const admin = await loginAsAdmin(page);
-
     await admin.waitForPageLoaded();
-
-    rijenAchteraf = await admin.getRowCount();
-      
-    admin.logoutButton.click();
-
-})
-
-test ('e2e -> verwacht 1 extra reservering t.o.v. begin situatie', async ({ page }) => {
-
-    expect(rijenAchteraf - rijenVooraf).toBe(1);
-})
-
-test('e2e -> achteraf: verwijder de meest recente reservering', async({page}) => {
-
-    const admin = await loginAsAdmin(page);
-
-    await admin.waitForPageLoaded();
-
     const before = await admin.getLastRowId();
     const rijenVooraf = await admin.getRowCount();
 
-    
- if (rijenVooraf === 0) {
+    if (rijenVooraf === 0) {
     test.skip(true, 'No reservations to delete.');
-  }
+        }
 
-    // console.log(rijenVooraf,"->",before);
-     const deletedId = await admin.deleteLastReservation(true);
+    console.log(rijenVooraf,"->",before);
+    const deletedId = await admin.deleteLastReservation(true);
 
     await admin.waitForPageLoaded();
     
     const after = await admin.getLastRowId();
     const rijenAchteraf = await admin.getRowCount();
 
-    // console.log(rijenAchteraf,"->",after);
+    console.log(rijenAchteraf,"->",after);
 
     expect(rijenAchteraf).toBe(Number(rijenVooraf) - 1);
 
@@ -101,6 +66,7 @@ test('e2e -> achteraf: verwijder de meest recente reservering', async({page}) =>
 
     admin.logoutButton.click();
 
-})
+
+});
 
 

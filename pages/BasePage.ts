@@ -9,7 +9,8 @@ export class BasePage {
     }
 
     async goto(url: string) { 
-        await this.page.goto(url, { waitUntil: 'networkidle' });
+        await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+        await this.page.waitForLoadState('domcontentloaded');       
     }
 
     async waitForPageLoaded() {
