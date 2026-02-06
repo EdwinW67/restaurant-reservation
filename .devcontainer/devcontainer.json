@@ -25,5 +25,5 @@
     }
   },
 
-  "postCreateCommand": "cd backend && npm install"
+  "postCreateCommand": "npm install && npx playwright install-deps && cd backend && npm install"
 }
