@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { request } from 'node:http';
+import { test } from '@playwright/test';
+import { expect } from 'playwright-setup';
 
 test('rejects invalid date', async ({ request }) => {
     const response = await request.post('/reservations', {
@@ -12,7 +12,7 @@ test('rejects invalid date', async ({ request }) => {
         },
     });
 
-    expect(response.status()).toBe(500);
+    await expect(response).toBeValidResponse({ expectedStatus: 500 });
 });
 
 test('rejects invalid email', async ({ request }) => {
@@ -26,7 +26,7 @@ test('rejects invalid email', async ({ request }) => {
         },
     });
 
-    expect(response.status()).toBe(500);
+    await expect(response).toBeValidResponse({ expectedStatus: 500 });
 });
 
 test('rejects invalid number', async ({ request }) => {
@@ -40,7 +40,7 @@ test('rejects invalid number', async ({ request }) => {
         },
     });
 
-    expect(response.status()).toBe(500);
+    await expect(response).toBeValidResponse({ expectedStatus: 500 });
 });
 
 test('rejects missing fields', async ({ request }) => {
@@ -48,12 +48,12 @@ test('rejects missing fields', async ({ request }) => {
         data: { name: 'Ed' },
     });
 
-    expect(response.status()).toBe(400);
+    await expect(response).toBeValidResponse({ expectedStatus: 400 });
 });
 
 test('delete requires admin auth (unauthorized without login)', async ({
     request,
 }) => {
-    const res = await request.delete('/admin/reservations/999999');
-    expect(res.status()).toBe(401);
+    const response = await request.delete('/admin/reservations/999999');
+    await expect(response).toBeValidResponse({ expectedStatus: 401 });
 });

@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { randomDateWithin30Days } from '../utils/date';
 import { Reservation } from 'types/reservation';
+import { expect } from 'playwright-setup';
 
 test.beforeEach(async ({ request }) => {
     await request.delete('/test/cleanup');
@@ -26,7 +27,7 @@ test.describe('Reservations API', () => {
             data: payload,
         });
 
-        expect(response.ok()).toBeTruthy();
+        await expect(response).toBeValidResponse({ expectedStatus: 201 });
 
         const json = await response.json();
 
@@ -50,7 +51,7 @@ test('can create and then delete a reservation (admin)', async ({
     const login = await request.post('/admin/login', {
         data: { username: adminUser, password: adminPass },
     });
-    expect(login.ok()).toBeTruthy();
+    await expect(login).toBeValidResponse();
 
     // 2) Create a reservation on the public endpoint
     const payload = {
@@ -61,7 +62,7 @@ test('can create and then delete a reservation (admin)', async ({
         time: '20:30',
     };
     const createRes = await request.post('/reservations', { data: payload });
-    expect(createRes.status()).toBe(201);
+    await expect(createRes).toBeValidResponse({ expectedStatus: 201 });
     const created = await createRes.json();
 
     expect(created.id).toBeDefined();
