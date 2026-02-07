@@ -1,25 +1,20 @@
-import {test, expect} from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { AdminLoginPage } from '@pages/AdminLoginPage';
 
-test('Admin kan succesvol inloggen', async({page}) => {
-
+test('Admin kan succesvol inloggen', async ({ page }) => {
     const loginPage = new AdminLoginPage(page);
     await loginPage.open();
     await loginPage.loginInAsAdmin();
 
-    
-    await expect(loginPage.loginMessage).not.toBeVisible();
+    await expect(loginPage.loginMessage).toBeHidden();
+});
 
-
-})
-
-test('Foutieve inlog wordt geweigerd', async({page}) => {
-
+test('Foutieve inlog wordt geweigerd', async ({ page }) => {
     const loginPage = new AdminLoginPage(page);
     await loginPage.open();
-    await loginPage.login('admin','admin');
+    await loginPage.login('admin', 'admin');
 
-    await expect(loginPage.loginMessage).toHaveText('Invalid username or password');
-
-
-})
+    await expect(loginPage.loginMessage).toHaveText(
+        'Invalid username or password'
+    );
+});

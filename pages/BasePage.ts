@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Page, expect } from '@playwright/test';
 
 export class BasePage {
@@ -8,9 +7,12 @@ export class BasePage {
         this.page = page;
     }
 
-    async goto(url: string) { 
-        await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-        await this.page.waitForLoadState('domcontentloaded');       
+    async goto(url: string) {
+        await this.page.goto(url, {
+            waitUntil: 'domcontentloaded',
+            timeout: 30_000,
+        });
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
     async waitForPageLoaded() {

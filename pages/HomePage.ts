@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 
@@ -32,7 +31,7 @@ export class HomePage extends BasePage {
         });
         this.navReservations = page.getByRole('link', { name: 'Reservations' });
         this.navContact = page.getByRole('link', { name: 'Contact' });
-        this.navAdminPage = page.getByRole('link', {name: 'Admin'});
+        this.navAdminPage = page.getByRole('link', { name: 'Admin' });
 
         // Hero section
         this.heroTitle = page.locator('.hero-title');
@@ -44,8 +43,6 @@ export class HomePage extends BasePage {
             .locator('..')
             .locator('.card');
     }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 
     async open() {
         await this.goto('http://localhost:3000/');
@@ -67,5 +64,4 @@ export class HomePage extends BasePage {
     async clickMenu() {
         await this.navMenu.click();
     }
-
 }

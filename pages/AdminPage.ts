@@ -1,383 +1,366 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 
-
 export interface ReservationCellValues {
-  name: string;
-  email: string;
-  guests: string; // Keep as string to match DOM text; coerce in tests if needed
-  date: string;   // yyyy-mm-dd
-  time: string;   // HH:mm
+    name: string;
+    email: string;
+    guests: string; // Keep as string to match DOM text; coerce in tests if needed
+    date: string; // yyyy-mm-dd
+    time: string; // HH:mm
 }
 
-
 export class AdminPage extends BasePage {
-    
-// Static elements
-  readonly logoutButton: Locator;
-  readonly adminMessage: Locator;
+    // Static elements
+    readonly logoutButton: Locator;
+    readonly adminMessage: Locator;
 
-// table
+    // table
 
-  readonly table: Locator;
-  readonly tbody: Locator;
-  readonly rows: Locator;
-
-  // Filters
-  readonly filterName: Locator;
-  readonly filterDate: Locator;
-  readonly applyFilters: Locator;
-
-  // Edit modal elements
-  readonly editModal: Locator;
-  readonly editForm: Locator;
-  readonly editId: Locator;
-  readonly editName: Locator;
-  readonly editEmail: Locator;
-  readonly editGuests: Locator;
-  readonly editDate: Locator;
-  readonly editTime: Locator;
-  readonly closeModal: Locator;
-  readonly saveButton: Locator;
-
-  constructor(page: Page){
-
-    super(page);
-
-    
-// Basic selectors
-    this.logoutButton = page.locator('#logout-btn');
-    this.adminMessage = page.locator('#admin-message');
-
-    //Table handling    
-    this.table = page.locator('#reservations-table');
-    this.tbody = this.table.locator('tbody');
-    this.rows = this.tbody.locator('tr');
+    readonly table: Locator;
+    readonly tbody: Locator;
+    readonly rows: Locator;
 
     // Filters
-    this.filterName = page.locator('#filter-name');
-    this.filterDate = page.locator('#filter-date');
-    this.applyFilters = page.locator('#apply-filters');
+    readonly filterName: Locator;
+    readonly filterDate: Locator;
+    readonly applyFilters: Locator;
 
-    // Edit modal
-    this.editModal = page.locator('#edit-modal');
-    this.editForm = page.locator('#edit-form');
-    this.editId = page.locator('#edit-id');
-    this.editName = page.locator('#edit-name');
-    this.editEmail = page.locator('#edit-email');
-    this.editGuests = page.locator('#edit-guests');
-    this.editDate = page.locator('#edit-date');
-    this.editTime = page.locator('#edit-time');
-    this.closeModal = page.locator('#close-modal');
-    this.saveButton = this.editForm.locator('button[type="submit"]');
+    // Edit modal elements
+    readonly editModal: Locator;
+    readonly editForm: Locator;
+    readonly editId: Locator;
+    readonly editName: Locator;
+    readonly editEmail: Locator;
+    readonly editGuests: Locator;
+    readonly editDate: Locator;
+    readonly editTime: Locator;
+    readonly closeModal: Locator;
+    readonly saveButton: Locator;
 
-  }
+    constructor(page: Page) {
+        super(page);
 
-  // ------------------- Navigation ----------------------
-  async open() {
+        // Basic selectors
+        this.logoutButton = page.locator('#logout-btn');
+        this.adminMessage = page.locator('#admin-message');
+
+        //Table handling
+        this.table = page.locator('#reservations-table');
+        this.tbody = this.table.locator('tbody');
+        this.rows = this.tbody.locator('tr');
+
+        // Filters
+        this.filterName = page.locator('#filter-name');
+        this.filterDate = page.locator('#filter-date');
+        this.applyFilters = page.locator('#apply-filters');
+
+        // Edit modal
+        this.editModal = page.locator('#edit-modal');
+        this.editForm = page.locator('#edit-form');
+        this.editId = page.locator('#edit-id');
+        this.editName = page.locator('#edit-name');
+        this.editEmail = page.locator('#edit-email');
+        this.editGuests = page.locator('#edit-guests');
+        this.editDate = page.locator('#edit-date');
+        this.editTime = page.locator('#edit-time');
+        this.closeModal = page.locator('#close-modal');
+        this.saveButton = this.editForm.locator('button[type="submit"]');
+    }
+
+    // ------------------- Navigation ----------------------
+    async open() {
         await this.goto('/admin.html');
         await this.waitForPageLoaded();
     }
 
     async reloadPage() {
-      await this.reloadPage();
-
+        await this.reloadPage();
     }
 
-    
-  // ---------- Wait / Assertions ----------
+    // ---------- Wait / Assertions ----------
 
-async waitForRows(min = 1) {
-  await this.page.waitForFunction(
-    (count) => document.querySelectorAll('#reservations-table tbody tr').length >= count,
-    min
-  );
-}
+    async waitForRows(min = 1) {
+        await this.page.waitForFunction(
+            (count) =>
+                document.querySelectorAll('#reservations-table tbody tr')
+                    .length >= count,
+            min
+        );
+    }
 
-  
-async expectAdminMessageContains(text: string) {
-    await expect(this.adminMessage).toContainText(text);
-  }
+    async expectAdminMessageContains(text: string) {
+        await expect(this.adminMessage).toContainText(text);
+    }
 
-
- 
     /* ===========================
      Row queries
      =========================== */
 
-     /** Count all data rows */
-  async getRowCount(): Promise<number> {
-    return this.rows.count();
-  }
-  
-  /** Get row by index (0-based) */
-  rowByIndex(index: number): Locator {
-    return this.rows.nth(index);
-  }
+    /** Count all data rows */
+    async getRowCount(): Promise<number> {
+        return this.rows.count();
+    }
 
-  
-async waitForPageLoaded() {
-  // 1. Wait for the table to be visible
-  await this.table.waitFor({ state: 'visible' });
+    /** Get row by index (0-based) */
+    rowByIndex(index: number): Locator {
+        return this.rows.nth(index);
+    }
 
-  // 2. Wait until at least one render cycle of reservations has occurred
-  await this.page.waitForFunction(() => {
-    const rows = document.querySelectorAll('#reservations-table tbody tr');
-    return rows.length > 0;
-  });
-}
+    async waitForPageLoaded() {
+        // 1. Wait for the table to be visible
+        await this.table.waitFor({ state: 'visible' });
 
+        // 2. Wait until at least one render cycle of reservations has occurred
+        await this.page.waitForFunction(() => {
+            const rows = document.querySelectorAll(
+                '#reservations-table tbody tr'
+            );
+            return rows.length > 0;
+        });
+    }
 
-  /**
-   * Get row by reservation id using <tr data-id="..."> if present,
-   * otherwise anchor on a button with data-id and go up to the tr.
-   */
-  rowById(id: string | number): Locator {
-    const byTrDataId = this.tbody.locator(`tr[data-id="${id}"]`);
-    // Fallback: find the edit/delete button for id and climb to ancestor tr
-    const byButtonAnchor = this.page
-      .locator(`[data-testid="edit-btn"][data-id="${id}"], .edit-btn[data-id="${id}"], [data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`)
-      .locator('xpath=ancestor::tr');
-    return byTrDataId.or(byButtonAnchor);
-  }
- 
- /** First row containing visible text (name or email, etc.) */
-  rowByText(text: string): Locator {
-    return this.rows.filter({ hasText: text }).first();
-  }
+    /**
+     * Get row by reservation id using <tr data-id="..."> if present,
+     * otherwise anchor on a button with data-id and go up to the tr.
+     */
+    rowById(id: string | number): Locator {
+        const byTrDataId = this.tbody.locator(`tr[data-id="${id}"]`);
+        // Fallback: find the edit/delete button for id and climb to ancestor tr
+        const byButtonAnchor = this.page
+            .locator(
+                `[data-testid="edit-btn"][data-id="${id}"], .edit-btn[data-id="${id}"], [data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`
+            )
+            .locator('xpath=ancestor::tr');
+        return byTrDataId.or(byButtonAnchor);
+    }
 
-  
-async getIdOfRowByIndex(index: number): Promise<string> {
-  const button = this.rows
-    .nth(index)
-    .locator('[data-testid="delete-btn"], .delete-btn');
+    /** First row containing visible text (name or email, etc.) */
+    rowByText(text: string): Locator {
+        return this.rows.filter({ hasText: text }).first();
+    }
 
-  const id = await button.getAttribute('data-id');
+    async getIdOfRowByIndex(index: number): Promise<string> {
+        const button = this.rows
+            .nth(index)
+            .locator('[data-testid="delete-btn"], .delete-btn');
 
-  if (!id) {
-    throw new Error(`No data-id found for row index ${index}`);
-  }
+        const id = await button.getAttribute('data-id');
 
-  return id;
-}
+        if (!id) {
+            throw new Error(`No data-id found for row index ${index}`);
+        }
 
+        return id;
+    }
 
-  
-/* ===========================
+    /* ===========================
      Buttons inside rows
      =========================== */
 
-  /** Returns the Edit button locator within a row (supports testid and class) */
-  private editButtonIn(row: Locator): Locator {
-    // Comma in CSS is logical OR
-    return row.locator('[data-testid="edit-btn"], .edit-btn');
-  }
-  
-  /** Returns the Delete button locator within a row (supports testid and class) */
-  private deleteButtonIn(row: Locator): Locator {
-    return row.locator('[data-testid="delete-btn"], .delete-btn');
-  }
- 
-// --- Click by index ---
-  async clickEditByIndex(index: number): Promise<void> {
-    await this.editButtonIn(this.rowByIndex(index)).click();
-  }
-  async clickDeleteByIndex(index: number): Promise<void> {
-    await this.deleteButtonIn(this.rowByIndex(index)).click();
-  }
- 
-
- // --- Click by id ---
-  async clickEditById(id: string | number): Promise<void> {
-    await this.editButtonIn(this.rowById(id)).click();
-  }
-  
-async clickDeleteById(id: number | string) {
-  await this.page.locator(`[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`).click();
-}
-
-
-  
- // --- Click by visible text (name/email/etc.) ---
-  async clickEditByText(text: string): Promise<void> {
-    await this.editButtonIn(this.rowByText(text)).click();
-  }
-  async clickDeleteByText(text: string): Promise<void> {
-    await this.deleteButtonIn(this.rowByText(text)).click();
-  }
-
-
-
-async deleteNthReservation(n: number, confirm = true) {
-  const id = await this.getIdOfRowByIndex(n);
-  await this.deleteReservationById(Number(id), confirm);
-}
-
-
-async getLastRowId(): Promise<string> {
-  const count = await this.rows.count();
-
-  if (count === 0) {
-    throw new Error("No rows available.");
-  }
-
-  return this.getIdOfRowByIndex(count - 1);
-}
-
-
-async deleteLastReservation(confirm: boolean = true) {
-  const count = await this.rows.count();
-  if (count === 0) {
-    throw new Error('No rows available to delete.');
-  }
-
-  // Read the last row's id via its delete button
-  const lastIndex = count - 1;
-  const id = await this.getIdOfRowByIndex(lastIndex);
-
-  // Handle JS confirm dialog
-  this.page.once('dialog', dialog => {
-    if (confirm) dialog.accept();
-    else dialog.dismiss();
-  });
-
-  // Click the delete button for that id
-  await this.page
-    .locator(`[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`)
-    .click();
-
-  // If confirmed, wait for the row to disappear
-  if (confirm) {
-    // Prefer waiting for the row (if you set <tr data-id="...">)
-    const rowByDataId = this.tbody.locator(`tr[data-id="${id}"]`);
-    if (await rowByDataId.count().catch(() => 0)) {
-      await rowByDataId.waitFor({ state: 'detached' });
-    } else {
-      // Fallback: wait for the specific delete button to detach
-      await this.page
-        .locator(`[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`)
-        .waitFor({ state: 'detached' });
+    /** Returns the Edit button locator within a row (supports testid and class) */
+    private editButtonIn(row: Locator): Locator {
+        // Comma in CSS is logical OR
+        return row.locator('[data-testid="edit-btn"], .edit-btn');
     }
-  }
 
-  return id; // handy if the caller wants to assert the exact id removed
-}
+    /** Returns the Delete button locator within a row (supports testid and class) */
+    private deleteButtonIn(row: Locator): Locator {
+        return row.locator('[data-testid="delete-btn"], .delete-btn');
+    }
 
+    // --- Click by index ---
+    async clickEditByIndex(index: number): Promise<void> {
+        await this.editButtonIn(this.rowByIndex(index)).click();
+    }
+    async clickDeleteByIndex(index: number): Promise<void> {
+        await this.deleteButtonIn(this.rowByIndex(index)).click();
+    }
 
+    // --- Click by id ---
+    async clickEditById(id: string | number): Promise<void> {
+        await this.editButtonIn(this.rowById(id)).click();
+    }
 
+    async clickDeleteById(id: number | string) {
+        await this.page
+            .locator(
+                `[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`
+            )
+            .click();
+    }
 
-  // Click op buttons in the pop up
-  
+    // --- Click by visible text (name/email/etc.) ---
+    async clickEditByText(text: string): Promise<void> {
+        await this.editButtonIn(this.rowByText(text)).click();
+    }
+    async clickDeleteByText(text: string): Promise<void> {
+        await this.deleteButtonIn(this.rowByText(text)).click();
+    }
 
-async deleteReservationById(id: number, confirm: boolean = true) {
-  this.page.once('dialog', dialog => {
-    if (confirm) dialog.accept();
-    else dialog.dismiss();
-  });
+    async deleteNthReservation(n: number, confirm = true) {
+        const id = await this.getIdOfRowByIndex(n);
+        await this.deleteReservationById(Number(id), confirm);
+    }
 
-  await this.clickDeleteById(id);
+    async getLastRowId(): Promise<string> {
+        const count = await this.rows.count();
 
-  if (confirm) {
-    await this.page.locator(`tr[data-id="${id}"]`).waitFor({ state: 'detached' });
-  }
-}
+        if (count === 0) {
+            throw new Error('No rows available.');
+        }
 
+        return this.getIdOfRowByIndex(count - 1);
+    }
 
+    async deleteLastReservation(confirm = true) {
+        const count = await this.rows.count();
+        if (count === 0) {
+            throw new Error('No rows available to delete.');
+        }
 
+        // Read the last row's id via its delete button
+        const lastIndex = count - 1;
+        const id = await this.getIdOfRowByIndex(lastIndex);
 
+        // Handle JS confirm dialog
+        this.page.once('dialog', (dialog) => {
+            if (confirm) dialog.accept();
+            else dialog.dismiss();
+        });
 
+        // Click the delete button for that id
+        await this.page
+            .locator(
+                `[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`
+            )
+            .click();
 
-/* ===========================
+        // If confirmed, wait for the row to disappear
+        if (confirm) {
+            // Prefer waiting for the row (if you set <tr data-id="...">)
+            const rowByDataId = this.tbody.locator(`tr[data-id="${id}"]`);
+            if (await rowByDataId.count().catch(() => 0)) {
+                await rowByDataId.waitFor({ state: 'detached' });
+            } else {
+                // Fallback: wait for the specific delete button to detach
+                await this.page
+                    .locator(
+                        `[data-testid="delete-btn"][data-id="${id}"], .delete-btn[data-id="${id}"]`
+                    )
+                    .waitFor({ state: 'detached' });
+            }
+        }
+
+        return id; // handy if the caller wants to assert the exact id removed
+    }
+
+    // Click op buttons in the pop up
+
+    async deleteReservationById(id: number, confirm = true) {
+        this.page.once('dialog', (dialog) => {
+            if (confirm) dialog.accept();
+            else dialog.dismiss();
+        });
+
+        await this.clickDeleteById(id);
+
+        if (confirm) {
+            await this.page
+                .locator(`tr[data-id="${id}"]`)
+                .waitFor({ state: 'detached' });
+        }
+    }
+
+    /* ===========================
      Filters
      =========================== */
 
-  async applyFilter(options: { name?: string; date?: string } = {}) {
-    const { name, date } = options;
-    if (name !== undefined) await this.filterName.fill(name);
-    if (date !== undefined) await this.filterDate.fill(date); // yyyy-mm-dd
-    await this.applyFilters.click();
-  }
+    async applyFilter(options: { name?: string; date?: string } = {}) {
+        const { name, date } = options;
+        if (name !== undefined) await this.filterName.fill(name);
+        if (date !== undefined) await this.filterDate.fill(date); // yyyy-mm-dd
+        await this.applyFilters.click();
+    }
 
-  async resetFilters() {
-    await this.filterName.fill('');
-    await this.filterDate.fill('');
-    await this.applyFilters.click();
-  }
+    async resetFilters() {
+        await this.filterName.fill('');
+        await this.filterDate.fill('');
+        await this.applyFilters.click();
+    }
 
-
-
-
-/* ===========================
+    /* ===========================
      Edit modal workflow
      =========================== */
 
-  async waitForEditModal(open = true) {
-    if (open) {
-      await this.editModal.waitFor({ state: 'visible' });
-    } else {
-      await this.editModal.waitFor({ state: 'hidden' });
+    async waitForEditModal(open = true) {
+        if (open) {
+            await this.editModal.waitFor({ state: 'visible' });
+        } else {
+            await this.editModal.waitFor({ state: 'hidden' });
+        }
     }
-  }
 
-  async fillEditForm(fields: {
-    name?: string;
-    email?: string;
-    guests?: number | string;
-    date?: string; // yyyy-mm-dd
-    time?: string; // HH:mm
-  }) {
-    const { name, email, guests, date, time } = fields;
-    if (name !== undefined) await this.editName.fill(name);
-    if (email !== undefined) await this.editEmail.fill(email);
-    if (guests !== undefined) await this.editGuests.fill(String(guests));
-    if (date !== undefined) await this.editDate.fill(date);
-    if (time !== undefined) await this.editTime.fill(time);
-  }
+    async fillEditForm(fields: {
+        name?: string;
+        email?: string;
+        guests?: number | string;
+        date?: string; // yyyy-mm-dd
+        time?: string; // HH:mm
+    }) {
+        const { name, email, guests, date, time } = fields;
+        if (name !== undefined) await this.editName.fill(name);
+        if (email !== undefined) await this.editEmail.fill(email);
+        if (guests !== undefined) await this.editGuests.fill(String(guests));
+        if (date !== undefined) await this.editDate.fill(date);
+        if (time !== undefined) await this.editTime.fill(time);
+    }
 
-  async saveEdit() {
-    await this.saveButton.click();
-  }
+    async saveEdit() {
+        await this.saveButton.click();
+    }
 
-  async cancelEdit() {
-    await this.closeModal.click();
-  }
-  
-/* ===========================
+    async cancelEdit() {
+        await this.closeModal.click();
+    }
+
+    /* ===========================
      Table cell helpers
      =========================== */
 
-  /**
-   * Returns visible textual cell values for a specific reservation id.
-   * Order (based on your template): name, email, guests, date, time, (buttons cell)
-   */
-  async getCellValuesById(id: string | number): Promise<ReservationCellValues> {
-    const row = this.rowById(id);
-    const cells = row.locator('td');
-    const texts = await cells.allInnerTexts();
+    /**
+     * Returns visible textual cell values for a specific reservation id.
+     * Order (based on your template): name, email, guests, date, time, (buttons cell)
+     */
+    async getCellValuesById(
+        id: string | number
+    ): Promise<ReservationCellValues> {
+        const row = this.rowById(id);
+        const cells = row.locator('td');
+        const texts = await cells.allInnerTexts();
 
-    return {
-      name: texts[0]?.trim() ?? '',
-      email: texts[1]?.trim() ?? '',
-      guests: texts[2]?.trim() ?? '',
-      date: texts[3]?.trim() ?? '',
-      time: texts[4]?.trim() ?? '',
-    };
-  }
-    
-/**
-   * Same as above, but by visible text match (e.g., name or email).
-   */
-  async getCellValuesByText(text: string): Promise<ReservationCellValues> {
-    const row = this.rowByText(text);
-    const cells = row.locator('td');
-    const texts = await cells.allInnerTexts();
+        return {
+            name: texts[0]?.trim() ?? '',
+            email: texts[1]?.trim() ?? '',
+            guests: texts[2]?.trim() ?? '',
+            date: texts[3]?.trim() ?? '',
+            time: texts[4]?.trim() ?? '',
+        };
+    }
 
-    return {
-      name: texts[0]?.trim() ?? '',
-      email: texts[1]?.trim() ?? '',
-      guests: texts[2]?.trim() ?? '',
-      date: texts[3]?.trim() ?? '',
-      time: texts[4]?.trim() ?? '',
-    };
-  }
+    /**
+     * Same as above, but by visible text match (e.g., name or email).
+     */
+    async getCellValuesByText(text: string): Promise<ReservationCellValues> {
+        const row = this.rowByText(text);
+        const cells = row.locator('td');
+        const texts = await cells.allInnerTexts();
+
+        return {
+            name: texts[0]?.trim() ?? '',
+            email: texts[1]?.trim() ?? '',
+            guests: texts[2]?.trim() ?? '',
+            date: texts[3]?.trim() ?? '',
+            time: texts[4]?.trim() ?? '',
+        };
+    }
 }

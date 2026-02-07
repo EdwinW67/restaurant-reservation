@@ -2,7 +2,6 @@ import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export class AdminLoginPage extends BasePage {
-
     //navigatie elementen
 
     readonly usernameInput: Locator;
@@ -11,15 +10,13 @@ export class AdminLoginPage extends BasePage {
     readonly loginMessage: Locator;
 
     constructor(page: Page) {
-        super(page)
-
+        super(page);
 
         //de velden:
         this.usernameInput = page.locator('#username');
         this.passwordInput = page.locator('#password');
         this.loginButton = page.locator('button[type="submit"]');
         this.loginMessage = page.locator('#login-message');
-
     }
 
     async open() {
@@ -31,7 +28,6 @@ export class AdminLoginPage extends BasePage {
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
         await this.loginButton.click();
-
     }
 
     async getMessage() {
@@ -40,14 +36,7 @@ export class AdminLoginPage extends BasePage {
 
     async loginInAsAdmin() {
         await this.open();
-        
-        await this.login('admin','supersecret');
 
+        await this.login('admin', 'supersecret');
     }
-
-
-
-
-
-
 }
